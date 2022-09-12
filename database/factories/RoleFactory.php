@@ -5,9 +5,9 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Bundle>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Role>
  */
-class BundleFactory extends Factory
+class RoleFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,9 +17,8 @@ class BundleFactory extends Factory
     public function definition()
     {
         return [
-            "id" => integerValue(),
-            "name" => fake()->randomElement(['Free', 'Pro']),
-            "price" => fake()->randomFloat(0,300),
+            "name" => fake()->jobTitle(),
+            "description" => fake()->realText()
         ];
     }
 }

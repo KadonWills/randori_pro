@@ -17,10 +17,10 @@ class ClassroomFactory extends Factory
     public function definition()
     {
         return [
-            "name" => fake()->randomElement(["Level 1", "Level 2", "Level 3","Level 4"]),
+            "name" => fake()->randomElement(["Level 1", "Level 2", "Level 3","Level 4", "Level 5"]),
             "description" => fake()->realText(),
             "image" => fake()->imageUrl(),
-            "space" => fake()->random_int(20, 50)
+            "space" => fake()->randomNumber(2, true)
         ];
     }
 }

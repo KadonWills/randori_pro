@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Classroom;
 use App\Http\Requests\StoreClassroomRequest;
 use App\Http\Requests\UpdateClassroomRequest;
+use Illuminate\Support\Facades\Request;
+use Inertia\Inertia;
 
 class ClassroomController extends Controller
 {
@@ -15,7 +17,10 @@ class ClassroomController extends Controller
      */
     public function index()
     {
-        //
+        return Inertia::render('Classrooms',
+            [
+                "classrooms" => $this->classroomsPaginationData()
+            ]);
     }
 
     /**
@@ -82,5 +87,24 @@ class ClassroomController extends Controller
     public function destroy(Classroom $classroom)
     {
         //
+    }
+
+    public function classroomsPaginationData()
+    {
+        return Classroom::query()
+        ->when(Request::input("search"), function ($query, $search) {
+            $query->where("name", "like", '%'.$search.'%')
+                ->orWhere("description", "like", '%'.$search.'%');
+        })
+        // ->with(['role', 'subscription'])
+        ->paginate(10)
+        ->through(fn($data) => [
+            "id" => $data->id,
+            "name" => $data->name,
+            "description" => $data->description,
+            "image" => $data->image,
+            "space" => $data->space,
+        ]);
+
     }
 }

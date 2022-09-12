@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class StoreCourseRequest extends FormRequest
 {
@@ -13,7 +15,7 @@ class StoreCourseRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return Str::lower(Auth::user()->role->name) == "admin";
     }
 
     /**

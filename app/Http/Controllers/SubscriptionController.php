@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Subscription;
 use App\Http\Requests\StoreSubscriptionRequest;
 use App\Http\Requests\UpdateSubscriptionRequest;
+use Illuminate\Support\Facades\Request;
+use Inertia\Inertia;
 
 class SubscriptionController extends Controller
 {
@@ -15,7 +17,8 @@ class SubscriptionController extends Controller
      */
     public function index()
     {
-        //
+        return Inertia::render('Subscriptions');
+
     }
 
     /**
@@ -82,5 +85,24 @@ class SubscriptionController extends Controller
     public function destroy(Subscription $subscription)
     {
         //
+    }
+
+    public function subscriptionsPaginationData()
+    {
+        return Subscription::query()
+        ->when(Request::input("search"), function ($query, $search) {
+            $query->where("name", "like", '%'.$search.'%')
+                ->orWhere("description", "like", '%'.$search.'%');
+        })
+        // ->with(['role', 'subscription'])
+        ->paginate(10)
+        ->through(fn($data) => [
+            "id" => $data->id,
+            "user" => $data->user->first_name + ' '+$data->user->first_name,
+            "bundle" => $data->bundle->name,
+            "created_at" => $data->created_at,
+
+        ]);
+
     }
 }

@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Bundle;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Request as FacadesRequest;
+use App\Models\ClassroomCourse;
+use App\Models\Course;
+use App\Models\Subscription;
+use App\Models\User;
+use Illuminate\Support\Facades\Request ;
 use Inertia\Inertia;
 
-class BundleController extends Controller
+class DashboardController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,10 +18,14 @@ class BundleController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Bundles', [
-            "bundles" => $this->bundlesPaginationData()
+        return Inertia::render('Dashboard',
+        [
+            "active_courses" => Course::count(),
+            "active_users" => count(User::where('active', 1)->get()),
+            "total_users" => count(User::all()),
+            "total_subscriptions" => Subscription::count(),
+            "upcoming_courses" => count(ClassroomCourse::where('date', '>=', today())->get()),
         ]);
-
     }
 
     /**
@@ -86,29 +92,5 @@ class BundleController extends Controller
     public function destroy($id)
     {
         //
-    }
-
-    public function bundlesPaginationData()
-    {
-        return Bundle::query()
-        ->when(FacadesRequest::input("search"), function ($query, $search) {
-            $query->where("name", "like", '%'.$search.'%')
-                ->orWhere("description", "like", '%'.$search.'%')
-                ->orWhere("price", "like", '%'.$search.'%');
-        })
-        // ->with(['role', 'subscription'])
-        ->paginate(10)
-        ->through(fn($bundle) => [
-            "id" => $bundle->id,
-            "name" => $bundle->name,
-            "description" => $bundle->description,
-            "active" => $bundle->active,
-            "price" => $bundle->price,
-            "image" => $bundle->image,
-            "has_discount" => $bundle->has_discount,
-            "discount_price" => $bundle->discount_price,
-            "discount_end_date" => $bundle->discount_end_date,
-        ]);
-
     }
 }

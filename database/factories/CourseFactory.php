@@ -21,7 +21,7 @@ class CourseFactory extends Factory
             "description" => fake()->realText(),
             "active" => fake()->boolean(),
             "image" => fake()->imageUrl(),
-            "capacity" => fake()->random_int(20, 40)
+            "capacity" => fake()->randomNumber(2, true)
         ];
     }
 }

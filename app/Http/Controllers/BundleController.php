@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Bundle;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Request as FacadesRequest;
+use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 
 class BundleController extends Controller
@@ -40,7 +42,14 @@ class BundleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $b = Bundle::create($request->all());
+            Session::flash('message', $b->name." bundle was created successfully !");
+            return redirect()->back();
+        } catch (Exception $ex) {
+            Session::flash('message', "An error occurred \n Error: ". $ex->getMessage());
+            return redirect()->back()->withErrors($ex->getMessage());
+        }
     }
 
     /**
@@ -74,7 +83,15 @@ class BundleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try {
+            $b = Bundle::find($id);
+            $b->update($request->all());
+            Session::flash('message', $b->name." bundle was created successfully !");
+            return redirect()->back();
+        } catch (Exception $ex) {
+            Session::flash('message', "An error occurred \n Error: ". $ex->getMessage());
+            return redirect()->back()->withErrors($ex->getMessage());
+        }
     }
 
     /**
@@ -85,7 +102,16 @@ class BundleController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            $b =  Bundle::find($id);
+            // TODO: implement soft deletes
+            $b->delete();
+            Session::flash("message", "Successfully deleted user : ".$b->name);
+            return redirect()->back();
+        } catch (Exception $ex) {
+            Session::flash('message', $ex->getMessage());
+            return redirect()->back();
+        }
     }
 
     public function bundlesPaginationData()

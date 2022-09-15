@@ -11,6 +11,13 @@ class Role extends Model
     use HasFactory;
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $guarded = [];
+
+    /**
      * The users that belong to the Role
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

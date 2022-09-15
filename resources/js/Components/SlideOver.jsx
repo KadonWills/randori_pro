@@ -2,8 +2,10 @@ import { Fragment, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 
-export default function SlideOver({ title ="", isOpen = "true", children}) {
-    const [open, setOpen] = useState(isOpen)
+export default function SlideOver({ title ="", open = false, setOpen, children}) {
+    //const [open, setOpen] = useState(isOpen)
+
+
 
     return (
         <Transition.Root show={open} as={Fragment}>
@@ -56,9 +58,9 @@ export default function SlideOver({ title ="", isOpen = "true", children}) {
                                             </button>
                                         </div>
                                     </Transition.Child>
-                                    <div className="flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl">
+                                    <div className="flex h-full flex-col overflow-y-scroll bg-white dark:bg-slate-800 dark:text-slate-200 py-6 shadow-xl">
                                         <div className="px-4 sm:px-6">
-                                            <Dialog.Title className="text-lg font-medium text-gray-900">{title}</Dialog.Title>
+                                            <Dialog.Title className="text-lg font-medium ">{title}</Dialog.Title>
                                         </div>
                                         <div className="relative mt-6 flex-1 px-4 sm:px-6">
                                             {/* Replace with your content */}

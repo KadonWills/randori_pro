@@ -47,14 +47,14 @@ class UserController extends Controller
     public function store(Request $request)
     {
         try {
-            $u = new User($request->all());
-            $u->create();
-
+            //TODO: change all except('status') to all()
+            $request->classroom_id = intval($request->classroom_id) || null;
+            $u = User::create($request->except('status'));
+            Session::flash('message', $u->first_name." was created successfully !");
             return redirect()->route('users');
-
         } catch (Exception $ex) {
-            Session::flash('message', $ex->getMessage());
-            return redirect()->route('users')->with("errors" , [$ex->getMessage()]);
+            Session::flash('message', "An error occurred \n Error: ". $ex->getMessage());
+            return redirect()->route('users')->withErrors($ex->getMessage());
         }
     }
 
@@ -89,7 +89,16 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try {
+            $u = User::find($id);
+            $u->update($request->except('status'));
+            Session::flash("message", "Successfully updated user : ".$u->first_name);
+            //return redirect()->route('users');
+            return redirect()->back();
+        } catch (Exception $ex) {
+            Session::flash("error" , $ex->getMessage());
+            return redirect()->route('users');
+        }
     }
 
     /**
@@ -101,12 +110,14 @@ class UserController extends Controller
     public function destroy($id)
     {
         try {
-            $user =  User::where('id',$id)->first();
+            $user =  User::find($id);
+            // TODO: implement soft deletes
             $user->delete();
+            Session::flash("message", "Successfully deleted user : ".$user->first_name);
             return redirect()->route('users');
         } catch (Exception $ex) {
-            Session::flash('message', $ex->getMessage());
-            return redirect()->route('users')->with('errors', [$ex->getMessage()]);
+            Session::flash('error', $ex->getMessage());
+            return redirect()->route('users');
         }
     }
 
@@ -115,10 +126,11 @@ class UserController extends Controller
     {
         return User::query()
         ->when(FacadesRequest::input("search"), function ($query, $search) {
-            $query->where("first_name", "like", '%'.$search.'%')
-                ->orWhere("last_name", "like", '%'.$search.'%')
-                ->orWhere("email", "like", '%'.$search.'%')
-                ->orWhere("status", "like", '%'.$search.'%');
+            $query
+            ->where("email", "like", '%'.$search.'%');
+            //->orWhere("first_name", "like", '%'.$search.'%')
+              //  ->orWhere("last_name", "like", '%'.$search.'%')
+                // ->orWhere("status", "like", '%'.$search.'%');
 
         })
         // ->with(['role', 'subscription'])
@@ -126,13 +138,20 @@ class UserController extends Controller
         ->through(fn($user) => [
             "id" => $user->id,
             "name" => $user->first_name.' '.$user->last_name,
+            "first_name" => $user->first_name,
+            "last_name" => $user->last_name,
             "email" => $user->email,
+            "photo" => $user->photo,
             "role" => $user->role->name,
+            "role_id" => $user->role_id,
+            "classroom_id" => $user->classroom_id,
             "phone" => $user->phone,
+            "gender" => $user->gender,
             "active" => $user->active,
             "status" => $user->status,
+            "dob" => $user->dob,
             "age" => today()->get('year') -  intval(explode('-',$user->dob)[0]),
-            "Subscription" => $user->subscriptions->last(),
+            "subscription" => $user->subscriptions->last() ?? "-",
         ]);
 
     }

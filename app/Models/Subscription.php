@@ -12,6 +12,13 @@ class Subscription extends Model
     use HasFactory;
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $guarded = [];
+
+    /**
      * Get the user associated with the Subscription
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

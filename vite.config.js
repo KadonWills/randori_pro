@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import react from '@vitejs/plugin-react';
+import { transform } from '@babel/core';
 
 export default defineConfig({
     plugins: [
@@ -14,4 +15,5 @@ export default defineConfig({
     ssr: {
         noExternal: ['@inertiajs/server'],
     },
+    esbuild: transform
 });

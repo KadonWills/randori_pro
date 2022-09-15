@@ -1,3 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+*, html, body {
+    scroll-margin: 0;
+    scroll-padding: auto;
+    scrollbar-color: white black;
+    scrollbar-width: thin;
+    scroll-snap-type: proximity;
+}
+
+body.dark *, html {
+    scrollbar-color: black white ;
+}

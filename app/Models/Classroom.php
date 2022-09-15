@@ -12,6 +12,13 @@ class Classroom extends Model
     use HasFactory;
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $guarded = [];
+
+    /**
      * Get all of the users for the Classroom
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Classroom;
 use App\Http\Requests\StoreClassroomRequest;
 use App\Http\Requests\UpdateClassroomRequest;
+use Exception;
+use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 
 class ClassroomController extends Controller
@@ -41,7 +44,14 @@ class ClassroomController extends Controller
      */
     public function store(StoreClassroomRequest $request)
     {
-        //
+        try {
+            $classroom = Classroom::create($request->all());
+            Session::flash('message', $classroom->name." classroom was created successfully !");
+            return redirect()->back();
+        } catch (Exception $ex) {
+            Session::flash('message', "An error occurred \n Error: ". $ex->getMessage());
+            return redirect()->back()->withErrors($ex->getMessage());
+        }
     }
 
     /**
@@ -69,24 +79,41 @@ class ClassroomController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateClassroomRequest  $request
-     * @param  \App\Models\Classroom  $classroom
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateClassroomRequest $request, Classroom $classroom)
+    public function update(HttpRequest $request, $id)
     {
-        //
+        try {
+            $classroom = Classroom::find($id);
+            $classroom->update($request->all());
+            Session::flash('message', $classroom->name." classroom was created successfully !");
+            return redirect()->back();
+        } catch (Exception $ex) {
+            Session::flash('message', "An error occurred \n ". $ex->getMessage());
+            return redirect()->back()->withErrors($ex->getMessage());
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Classroom  $classroom
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Classroom $classroom)
+    public function destroy($id)
     {
-        //
+        try {
+            $classroom =  Classroom::find($id);
+            // TODO: implement soft deletes
+            $classroom->delete();
+            Session::flash("message", "Successfully deleted classroom : ".$classroom->name);
+            return redirect()->back();
+        } catch (Exception $ex) {
+            Session::flash('message', $ex->getMessage());
+            return redirect()->back();
+        }
     }
 
     public function classroomsPaginationData()

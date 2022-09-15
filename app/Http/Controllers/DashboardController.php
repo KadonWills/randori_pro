@@ -20,7 +20,8 @@ class DashboardController extends Controller
     {
         return Inertia::render('Dashboard',
         [
-            "active_courses" => Course::count(),
+            "active_courses" => count(Course::where('active', 1)->get()),
+            "total_courses" => Course::count(),
             "active_users" => count(User::where('active', 1)->get()),
             "total_users" => count(User::all()),
             "total_subscriptions" => Subscription::count(),

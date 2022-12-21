@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Classroom;
+use App\Models\ClassroomCourse;
+use App\Models\Course;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -14,7 +17,9 @@ class ClassroomCourseController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Calendar');
+        return Inertia::render('Calendar', [
+            "events" => ClassroomCourse::all()//->with(Course::class)->with(Classroom::class)
+        ]);
 
     }
 

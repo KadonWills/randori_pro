@@ -29,6 +29,9 @@
     },
     "dependencies": {
         "@heroicons/react": "^2.0.11",
+        "date-fns": "^2.29.3",
+        "react-big-calendar": "^1.5.0",
+        "react-datepicker": "^4.8.0",
         "react-icons": "^4.4.0",
         "react-table": "^7.8.0",
         "regenerator-runtime": "^0.13.9"

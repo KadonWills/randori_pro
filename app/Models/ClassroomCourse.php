@@ -16,4 +16,14 @@ class ClassroomCourse extends Model
      */
     protected $guarded = [];
 
+    public function classrooms()
+    {
+        return $this->belongsTo(Classroom::class);
+    }
+
+    public function courses()
+    {
+        return $this->belongsTo(Course::class);
+    }
+
 }
